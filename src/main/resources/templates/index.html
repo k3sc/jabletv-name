@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+    <link href="/style.css" rel="stylesheet" type="text/css"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <script type="text/javascript" src="/jquery.min.js"></script>
+    <link href="/layui/css/layui.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="/layui/layui.js"></script>
+</head>
+<body>
+<div class="header">
+    <div class="head">
+        <div class="search">
+            <form name="schform" id="schform">
+                <p><input type="text" name="keyboard" placeholder="请输入" autocomplete="off"/></p>
+                <input name="submit" type="submit" value="" class="sub"/>
+            </form>
+        </div>
+        <div class="loginbar">
+            <a class="register" lay-on="addVideo" style="width:100px;" one-link-mark="yes">添加</a>
+        </div>
+    </div>
+</div>
+<div class="wrap clearfix">
+    <div id="main">
+        <div class="slist">
+            <ul class="clearfix" id="list">
+                <!--                <li>-->
+                <!--                    <a href="#" target="_blank">-->
+                <!--                        <img src="https://pic.netbian.com/uploads/allimg/240519/205831-17161235119f4a.jpg"-->
+                <!--                             alt="刀剑神域 报纸墙少女 亚丝娜 4k壁纸 3840*2160"/>-->
+                <!--                        <b>刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域刀剑神域</b>-->
+                <!--                    </a>-->
+                <!--                </li>-->
+            </ul>
+        </div>
+        <div class="page"><b>1</b>
+            <a href="/4kdongman/index_2.html">2</a>
+            <a href="/4kdongman/index_3.html">3</a>
+            <a href="/4kdongman/index_4.html">4</a>
+            <a href="/4kdongman/index_5.html">5</a>
+            <a href="/4kdongman/index_6.html">6</a>
+            <a href="/4kdongman/index_7.html">7</a>
+            <a href="/4kdongman/index_8.html">8</a>
+            <span class="slh">…</span>
+            <a href="/4kdongman/index_119.html">119</a>
+            <a href="/4kdongman/index_2.html">下一页</a></div>
+    </div>
+    <br>
+</div>
+</body>
+<script>
+    $.ajax({
+        url: '/list', // 后台接口地址
+        type: 'POST',
+        dataType: 'json',
+        success: function (response) {
+            // 处理成功返回的数据
+            console.log('成功获取到数据：', response);
+            // 在这里处理返回的数据，比如更新页面内容等
+            for (let i = 0; i < response.length; i++) {
+                var videoInfo = response[i];
+                var str = ` <li>
+                                <a href="${videoInfo.videoUrl}" target="_blank">
+                                    <img src="data:image/jpg;base64,${videoInfo.image}"
+                                         alt="${videoInfo.title}"/>
+                                    <b>${videoInfo.title}</b>
+                                </a>
+                            </li>`;
+                $("#list").append(str)
+            }
+        },
+        error: function (xhr, status, error) {
+            // 处理请求失败的情况
+            console.error('请求失败：', status, error);
+        }
+    });
+    layui.use(function () {
+        var layer = layui.layer;
+        var util = layui.util;
+        // 事件
+        util.on('lay-on', {
+            'addVideo': function () {
+                layer.prompt({title: '请输入文本'}, function (value, index, elem) {
+                    if (value === '') return elem.focus();
+
+                    var str = util.escape(value);
+                    $.ajax({
+                        url: `/add?value=${str}`, // 后台接口地址
+                        type: 'GET',
+                        success: function (response) {
+                            // 处理成功返回的数据
+                            console.log('成功获取到数据：', response);
+                            layer.msg('返回：' + response); // 显示 value
+                        },
+                        error: function (xhr, status, error) {
+                            // 处理请求失败的情况
+                            console.error('请求失败：', status, error);
+                        }
+                    });
+                    layer.close(index);
+                });
+            },
+        })
+    });
+</script>
+</html>

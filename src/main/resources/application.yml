@@ -1,0 +1,32 @@
+server:
+  port: 80
+
+spring:
+  thymeleaf:
+    cache: false
+    encoding: UTF-8
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/jabletv-repo?serverTimezone=GMT%2B8&useSSL=FALSE
+    username: root
+    password: root
+
+mybatis:
+  config-location: classpath:mybatis.cfg.xml
+  type-aliases-package: org.k3scc.jabletvrepo.system
+  mapper-locations:
+    - classpath:mapper/*.xml
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  global-config:
+    db-config:
+      id-type: auto
+      field-strategy: NOT_EMPTY
+      db-type: MYSQL
+  configuration:
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
